@@ -3,7 +3,7 @@
 //motor positions not yet messured!!
 int northWestPin = 9;
 int northEastPin = 11;
-int southEastPin = 6;
+int southEastPin = 3;
 int southWestPin = 10;
 
 int zeroThrottle = 150;
@@ -20,7 +20,8 @@ void setup() {
 	while(true){
 		Serial.print(".");
 		if(Serial.available()){ // Wait for initialization command from user
-			if(Serial.read() == 'X') {
+			char command = Serial.read();
+			if(command == 'X') {
 				Serial.println("Starting copter");
 				currentThrottle = 156;
 				analogWrite(northWestPin, currentThrottle);
@@ -36,24 +37,26 @@ void setup() {
 
 void loop() {
 	if(Serial.available()){
-		if(Serial.read() == 'X') {
+		char command = Serial.read();
+
+		if(command == 'X') {
 	        Serial.println("Stop");
 	        currentThrottle = zeroThrottle;
 		}
 
-		if(Serial.read() == 'F') {        
+		if(command == 'F') {        
 	        currentThrottle = currentThrottle + 1;
 			Serial.print("Faster: ");
 			Serial.println(currentThrottle);
 		}	
 
-		if(Serial.read() == 'S') {        
+		if(command == 'S') {        
 	        currentThrottle = currentThrottle - 1;
 			Serial.print("Slower: ");
 			Serial.println(currentThrottle);
 		}	
 
-		if(Serial.read() == 'E') {
+		if(command == 'E') {
 	        Serial.println("Emergency Stop");
 	        currentThrottle = 0;
 		}
