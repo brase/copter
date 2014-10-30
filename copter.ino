@@ -1,6 +1,7 @@
 #include "Wire.h"
 #include "I2Cdev.h"
 #include "MPU6050_6Axis_MotionApps20.h"
+#include <PID_v1.h>
 
 #define LED_PIN 13 // (Arduino is 13, Teensy is 11, Teensy++ is 6)
 bool blinkState = false;
@@ -20,6 +21,7 @@ Quaternion q;
 VectorFloat gravity;
 float euler[3];
 float ypr[3];
+double yprd[3];
 
 //  Use the following global variables 
 //  to calibrate the gyroscope sensor and accelerometer readings
@@ -37,12 +39,18 @@ float    GYRO_FACTOR;
 // This global varible tells how to scale acclerometer data
 float    ACCEL_FACTOR;
 
-// Variables to store the values from the sensor readings
-int16_t ax, ay, az;
-int16_t gx, gy, gz;
-
 // Buffer for data output
 char dataOut[256];
+
+double nickOut, nickSet = 0;
+PID nickController(&yprd[2], &nickOut, &nickSet, 7, 0.0, 1.1, REVERSE);
+
+double rollOut, rollSet = 0;
+PID rollController(&yprd[1], &rollOut, &rollSet, 10.0, 0.06, 1.5, REVERSE);
+
+double yawOut, yawSet = 0;
+PID yawController(&yprd[0], &yawOut, &yawSet, 2.0, 0.0, 0.0, DIRECT);
+
 // ================================================================
 // ===               INTERRUPT DETECTION ROUTINE                ===
 // ================================================================
@@ -58,13 +66,13 @@ void dmpDataReady() {
 
 
 //motor positions not yet messured!!
-int northWestPin = 9;
-int northEastPin = 11;
-int southEastPin = 5;
-int southWestPin = 6;
+int northWestPin = 6;
+int northEastPin = 5;
+int southEastPin = 9;
+int southWestPin = 11;
 
-int zeroThrottle = 150;
-int currentThrottle = 150;
+double zeroThrottle = 150;
+double currentThrottle = 150;
 
 void setup() {	
 	Serial.begin(115200);
@@ -146,6 +154,13 @@ void setup() {
 	// configure LED for output
     pinMode(LED_PIN, OUTPUT);
 	
+	nickController.SetMode(AUTOMATIC);
+	nickController.SetOutputLimits(-1000, 1000);
+	rollController.SetMode(AUTOMATIC);
+	rollController.SetOutputLimits(-1000, 1000);
+	yawController.SetMode(AUTOMATIC);
+	yawController.SetOutputLimits(-300, 300);
+
 	while(true){
 		Serial.print(".");
 		if(Serial.available()){ // Wait for initialization command from user
@@ -237,13 +252,47 @@ void loop() {
 		    mpu.dmpGetQuaternion(&q, fifoBuffer);
 		    mpu.dmpGetGravity(&gravity, &q);
 		    mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
+
+		    yprd[0] = ypr[0];
+		    yprd[1] = ypr[1];
+		    yprd[2] = ypr[2];
+
+		    nickController.Compute();
+		    rollController.Compute();
+		    yawController.Compute();
 	  
-			Serial.print("DMP:");
-			Serial.print(ypr[2]*RADIANS_TO_DEGREES, 2);
+			// Serial.print("DMP:");
+			// Serial.print(yprd[2]*RADIANS_TO_DEGREES, 2);
+			// Serial.print(":");
+			// Serial.print(-yprd[1]*RADIANS_TO_DEGREES, 2);
+			// Serial.print(":");
+			// Serial.println(yprd[0]*RADIANS_TO_DEGREES, 2);   
+
+			// Serial.print("PID:");   
+			// Serial.print(nickOut, 2);
+			// Serial.print(":");
+			// Serial.print(rollOut, 2);
+			// Serial.print(":");
+			// Serial.println(yawOut, 2);
+
+			double nw = currentThrottle - nickOut + rollOut - yawOut;
+			double ne = currentThrottle - nickOut - rollOut + yawOut;
+			double se = currentThrottle + nickOut - rollOut - yawOut;
+			double sw = currentThrottle + nickOut + rollOut + yawOut;
+
+			// analogWrite(northWestPin, nw);
+			// analogWrite(northEastPin, ne);
+			// analogWrite(southEastPin, se);
+			// analogWrite(southWestPin, sw);
+
+			Serial.print("PWM:");   
+			Serial.print(nw, 2);
 			Serial.print(":");
-			Serial.print(-ypr[1]*RADIANS_TO_DEGREES, 2);
+			Serial.print(ne, 2);
 			Serial.print(":");
-			Serial.println(ypr[0]*RADIANS_TO_DEGREES, 2);       
+			Serial.print(se, 2);
+			Serial.print(":");
+			Serial.println(sw, 2);
 		}
 	}
 }
