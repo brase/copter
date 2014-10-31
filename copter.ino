@@ -23,22 +23,6 @@ float euler[3];
 float ypr[3];
 double yprd[3];
 
-//  Use the following global variables 
-//  to calibrate the gyroscope sensor and accelerometer readings
-float    base_x_gyro = 0;
-float    base_y_gyro = 0;
-float    base_z_gyro = 0;
-float    base_x_accel = 0;
-float    base_y_accel = 0;
-float    base_z_accel = 0;
-
-
-// This global variable tells us how to scale gyroscope data
-float    GYRO_FACTOR;
-
-// This global varible tells how to scale acclerometer data
-float    ACCEL_FACTOR;
-
 // Buffer for data output
 char dataOut[256];
 
@@ -109,29 +93,6 @@ void setup() {
         // set our DMP Ready flag so the main loop() function knows it's okay to use it
         Serial.println(F("DMP ready! Waiting for first interrupt..."));
         dmpReady = true;
-
-        // Set the full scale range of the gyro
-        uint8_t FS_SEL = 0;
-        //mpu.setFullScaleGyroRange(FS_SEL);
-
-        // get default full scale value of gyro - may have changed from default
-        // function call returns values between 0 and 3
-        uint8_t READ_FS_SEL = mpu.getFullScaleGyroRange();
-        Serial.print("FS_SEL = ");
-        Serial.println(READ_FS_SEL);
-        GYRO_FACTOR = 131.0/(FS_SEL + 1);
-        
-
-        // get default full scale value of accelerometer - may not be default value.  
-        // Accelerometer scale factor doesn't reall matter as it divides out
-        uint8_t READ_AFS_SEL = mpu.getFullScaleAccelRange();
-        Serial.print("AFS_SEL = ");
-        Serial.println(READ_AFS_SEL);
-        //ACCEL_FACTOR = 16384.0/(AFS_SEL + 1);
-        
-        // Set the full scale range of the accelerometer
-        //uint8_t AFS_SEL = 0;
-        //mpu.setFullScaleAccelRange(AFS_SEL);
 
         // get expected DMP packet size for later comparison
         packetSize = mpu.dmpGetFIFOPacketSize();
