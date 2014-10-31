@@ -155,11 +155,11 @@ void setup() {
     pinMode(LED_PIN, OUTPUT);
 	
 	nickController.SetMode(AUTOMATIC);
-	nickController.SetOutputLimits(-1000, 1000);
+	nickController.SetOutputLimits(-127, 127);
 	rollController.SetMode(AUTOMATIC);
-	rollController.SetOutputLimits(-1000, 1000);
+	rollController.SetOutputLimits(-127, 127);
 	yawController.SetMode(AUTOMATIC);
-	yawController.SetOutputLimits(-300, 300);
+	yawController.SetOutputLimits(-127, 127);
 
 	while(true){
 		Serial.print(".");
