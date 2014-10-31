@@ -246,13 +246,13 @@ void loop() {
 			// analogWrite(southEastPin, se);
 			// analogWrite(southWestPin, sw);
 
-			Serial.print("PWM:");   
+			Serial.print("PWM:____");   
 			Serial.print(nw, 2);
-			Serial.print(":");
+			Serial.print("____:____");
 			Serial.print(ne, 2);
-			Serial.print(":");
+			Serial.print("____:____");
 			Serial.print(se, 2);
-			Serial.print(":");
+			Serial.print("____:____");
 			Serial.println(sw, 2);
 		}
 	}
