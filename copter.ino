@@ -26,14 +26,16 @@ double yprd[3];
 // Buffer for data output
 char dataOut[256];
 
+bool USE_PID = false;
+
 double nickOut, nickSet = 0;
-PID nickController(&yprd[2], &nickOut, &nickSet, 7, 0.0, 1.1, REVERSE);
+PID nickController(&yprd[2], &nickOut, &nickSet, 0, 0, 0, REVERSE);
 
 double rollOut, rollSet = 0;
-PID rollController(&yprd[1], &rollOut, &rollSet, 10.0, 0.06, 1.5, REVERSE);
+PID rollController(&yprd[1], &rollOut, &rollSet, 4, 0.4, 1.8, REVERSE);
 
 double yawOut, yawSet = 0;
-PID yawController(&yprd[0], &yawOut, &yawSet, 2.0, 0.0, 0.0, DIRECT);
+PID yawController(&yprd[0], &yawOut, &yawSet, 0, 0.0, 0.0, DIRECT);
 
 // ================================================================
 // ===               INTERRUPT DETECTION ROUTINE                ===
@@ -117,10 +119,13 @@ void setup() {
 	
 	nickController.SetMode(AUTOMATIC);
 	nickController.SetOutputLimits(-127, 127);
+	nickController.SetSampleTime(10);
 	rollController.SetMode(AUTOMATIC);
 	rollController.SetOutputLimits(-127, 127);
+	rollController.SetSampleTime(10);
 	yawController.SetMode(AUTOMATIC);
 	yawController.SetOutputLimits(-127, 127);
+	yawController.SetSampleTime(10);
 
 	while(true){
 		Serial.print(".");
@@ -152,6 +157,7 @@ void loop() {
 		if(command == 'X') {
 	        Serial.println("Stop");
 	        currentThrottle = zeroThrottle;
+	        USE_PID = false;
 		}
 
 		if(command == 'F') {        
@@ -168,13 +174,56 @@ void loop() {
 
 		if(command == 'E') {
 	        Serial.println("Emergency Stop");
-	        currentThrottle = 0;
+	        currentThrottle = 100;
+	        USE_PID = false;
 		}
 
-		analogWrite(northWestPin, currentThrottle);
-		analogWrite(northEastPin, currentThrottle);
-		analogWrite(southEastPin, currentThrottle);
-		analogWrite(southWestPin, currentThrottle);
+		if(command == 'P'){
+			Serial.println("Toggle PID");
+			USE_PID = !USE_PID;
+		}
+
+		if(command == 'q'){
+			double kp = rollController.GetKp() + 0.1;
+			rollController.SetTunings(rollController.GetKp() + 0.1, rollController.GetKi(), rollController.GetKd());
+			Serial.print("kp:   ");
+			Serial.println(kp);
+		}
+
+		if(command == 'a'){
+			double kp = rollController.GetKp() - 0.1;
+			rollController.SetTunings(kp, rollController.GetKi(), rollController.GetKd());
+			Serial.print("kp:   ");
+			Serial.println(kp);
+		}
+
+		if(command == 'w'){
+			double ki = rollController.GetKi() + 0.1;
+			rollController.SetTunings(rollController.GetKp(), ki, rollController.GetKd());
+			Serial.print("ki:   ");
+			Serial.println(ki);
+		}
+
+		if(command == 's'){
+			double ki = rollController.GetKi() - 0.1;
+			rollController.SetTunings(rollController.GetKp(), ki, rollController.GetKd());
+			Serial.print("ki:   ");
+			Serial.println(ki);
+		}
+
+		if(command == 'e'){
+			double kd = rollController.GetKd() + 0.1;
+			rollController.SetTunings(rollController.GetKp(), rollController.GetKi(), kd);
+			Serial.print("kd:   ");
+			Serial.println(kd);
+		}
+
+		if(command == 'd'){
+			double kd = rollController.GetKd() - 0.1;
+			rollController.SetTunings(rollController.GetKp(), rollController.GetKi(), kd);
+			Serial.print("kd:   ");
+			Serial.println(kd);
+		}
 	}
 
     //Serial.println(currentThrottle);
@@ -212,49 +261,56 @@ void loop() {
 		    // Obtain YPR angles from buffer
 		    mpu.dmpGetQuaternion(&q, fifoBuffer);
 		    mpu.dmpGetGravity(&gravity, &q);
-		    mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
-
-		    yprd[0] = ypr[0];
-		    yprd[1] = ypr[1];
-		    yprd[2] = ypr[2];
-
-		    nickController.Compute();
-		    rollController.Compute();
-		    yawController.Compute();
-	  
-			// Serial.print("DMP:");
-			// Serial.print(yprd[2]*RADIANS_TO_DEGREES, 2);
-			// Serial.print(":");
-			// Serial.print(-yprd[1]*RADIANS_TO_DEGREES, 2);
-			// Serial.print(":");
-			// Serial.println(yprd[0]*RADIANS_TO_DEGREES, 2);   
-
-			// Serial.print("PID:");   
-			// Serial.print(nickOut, 2);
-			// Serial.print(":");
-			// Serial.print(rollOut, 2);
-			// Serial.print(":");
-			// Serial.println(yawOut, 2);
-
-			double nw = currentThrottle - nickOut + rollOut - yawOut;
-			double ne = currentThrottle - nickOut - rollOut + yawOut;
-			double se = currentThrottle + nickOut - rollOut - yawOut;
-			double sw = currentThrottle + nickOut + rollOut + yawOut;
-
-			// analogWrite(northWestPin, nw);
-			// analogWrite(northEastPin, ne);
-			// analogWrite(southEastPin, se);
-			// analogWrite(southWestPin, sw);
-
-			Serial.print("PWM:____");   
-			Serial.print(nw, 2);
-			Serial.print("____:____");
-			Serial.print(ne, 2);
-			Serial.print("____:____");
-			Serial.print(se, 2);
-			Serial.print("____:____");
-			Serial.println(sw, 2);
+		    mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);		  
 		}
 	}
+
+	yprd[0] = ypr[0];
+    yprd[1] = ypr[1];
+    yprd[2] = ypr[2];
+
+    nickController.Compute();
+    rollController.Compute();
+    yawController.Compute();
+
+	// Serial.print("DMP:");
+	// Serial.print(yprd[2]*RADIANS_TO_DEGREES, 2);
+	// Serial.print(":");
+	// Serial.print(-yprd[1]*RADIANS_TO_DEGREES, 2);
+	// Serial.print(":");
+	// Serial.println(yprd[0]*RADIANS_TO_DEGREES, 2);   
+
+	// Serial.print("PID:");   
+	// Serial.print(nickOut, 2);
+	// Serial.print(":");
+	// Serial.print(rollOut, 2);
+	// Serial.print(":");
+	// Serial.println(yawOut, 2);
+
+	double nw = currentThrottle - nickOut + rollOut - yawOut;
+	double ne = currentThrottle - nickOut - rollOut + yawOut;
+	double se = currentThrottle + nickOut - rollOut - yawOut;
+	double sw = currentThrottle + nickOut + rollOut + yawOut;
+
+	if(USE_PID){
+		analogWrite(northWestPin, nw);
+		analogWrite(northEastPin, ne);
+		analogWrite(southEastPin, se);
+		analogWrite(southWestPin, sw);
+	}else{
+		analogWrite(northWestPin, currentThrottle);
+		analogWrite(northEastPin, currentThrottle);
+		analogWrite(southEastPin, currentThrottle);
+		analogWrite(southWestPin, currentThrottle);
+	}
+
+	// Serial.print("PWM:____");   
+	// Serial.print(nw, 2);
+	// Serial.print("____:____");
+	// Serial.print(ne, 2);
+	// Serial.print("____:____");
+	// Serial.print(se, 2);
+	// Serial.print("____:____");
+	// Serial.println(sw, 2);
 }
 
