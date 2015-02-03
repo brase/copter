@@ -1,3 +1,4 @@
+#include "MotorSpeedController.h"
 #include "Motors.h"
 #include "Wire.h"
 #include "I2Cdev.h"
@@ -9,6 +10,7 @@ bool blinkState = false;
 
 MPU6050 mpu;
 Motors motors;
+MotorSpeedController motorController;
 
 // MPU control/status vars
 bool dmpReady = false;
@@ -23,22 +25,11 @@ Quaternion q;
 VectorFloat gravity;
 float euler[3];
 float ypr[3];
-double yprd[3];
 
 // Buffer for data output
 char dataOut[256];
 
 bool USE_PID = false;
-
-double nickOut, nickSet = 0;
-PID nickController(&yprd[2], &nickOut, &nickSet, 0, 0, 0, REVERSE);
-
-double rollOut, rollSet = 0;
-PID rollController(&yprd[1], &rollOut, &rollSet, 4, 0.4, 1.8, REVERSE);
-
-double yawOut, yawSet = 0;
-PID yawController(&yprd[0], &yawOut, &yawSet, 0, 0.0, 0.0, DIRECT);
-
 // ================================================================
 // ===               INTERRUPT DETECTION ROUTINE                ===
 // ================================================================
@@ -106,15 +97,8 @@ void setup() {
 	// configure LED for output
 	pinMode(LED_PIN, OUTPUT);
 
-	nickController.SetMode(AUTOMATIC);
-	nickController.SetOutputLimits(-127, 127);
-	nickController.SetSampleTime(10);
-	rollController.SetMode(AUTOMATIC);
-	rollController.SetOutputLimits(-127, 127);
-	rollController.SetSampleTime(10);
-	yawController.SetMode(AUTOMATIC);
-	yawController.SetOutputLimits(-127, 127);
-	yawController.SetSampleTime(10);
+	motorController.init();
+	motors.init();
 
 	while (true){
 		Serial.print(".");
@@ -169,7 +153,7 @@ void loop() {
 			USE_PID = !USE_PID;
 		}
 
-		if (command == 'q'){
+		/*if (command == 'q'){
 			double kp = rollController.GetKp() + 0.1;
 			rollController.SetTunings(rollController.GetKp() + 0.1, rollController.GetKi(), rollController.GetKd());
 			Serial.print("kp:   ");
@@ -209,7 +193,7 @@ void loop() {
 			rollController.SetTunings(rollController.GetKp(), rollController.GetKi(), kd);
 			Serial.print("kd:   ");
 			Serial.println(kd);
-		}
+		}*/
 	}
 
 	//Serial.println(currentThrottle);
@@ -252,14 +236,6 @@ void loop() {
 		}
 	}
 
-	yprd[0] = ypr[0];
-	yprd[1] = -ypr[1];
-	yprd[2] = ypr[2];
-
-	nickController.Compute();
-	rollController.Compute();
-	yawController.Compute();
-
 	// Serial.print("DMP:");
 	// Serial.print(yprd[2]*RADIANS_TO_DEGREES, 2);
 	// Serial.print(":");
@@ -275,10 +251,18 @@ void loop() {
 	//	Serial.println(yawOut, 2);
 
 	if (USE_PID){
-		double nw = currentThrottle - nickOut + rollOut - yawOut;
-		double ne = currentThrottle - nickOut - rollOut + yawOut;
-		double se = currentThrottle + nickOut - rollOut - yawOut;
-		double sw = currentThrottle + nickOut + rollOut + yawOut;
+		double motorThrottleValues[4];
+		double wantedAngles[3];
+		wantedAngles[0] = 0;
+		wantedAngles[1] = 0;
+		wantedAngles[2] = 0;
+
+		motorController.compute(currentThrottle, ypr, wantedAngles, motorThrottleValues);
+
+		double nw = motorThrottleValues[0];
+		double ne = motorThrottleValues[1];
+		double se = motorThrottleValues[2];
+		double sw = motorThrottleValues[3];
 
 		motors.setSpeed(nw, ne, se, sw);
 	}
