@@ -24,9 +24,15 @@
     <ClInclude Include="Motors.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="FUTABA_SBUS.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Motors.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FUTABA_SBUS.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -8,6 +8,7 @@
 bool blinkState = false;
 
 MPU6050 mpu;
+Motors motors;
 
 // MPU control/status vars
 bool dmpReady = false;
@@ -51,7 +52,6 @@ void dmpDataReady() {
 	digitalWrite(LED_PIN, blinkState);
 }
 
-double zeroThrottle = 150;
 double currentThrottle = 150;
 
 void setup() {
@@ -103,12 +103,6 @@ void setup() {
 		Serial.println(F(")"));
 	}
 
-	//lowest pwm
-	analogWrite(northWestPin, zeroThrottle);
-	analogWrite(northEastPin, zeroThrottle);
-	analogWrite(southEastPin, zeroThrottle);
-	analogWrite(southWestPin, zeroThrottle);
-
 	// configure LED for output
 	pinMode(LED_PIN, OUTPUT);
 
@@ -129,10 +123,7 @@ void setup() {
 			if (command == 'X') {
 				Serial.println("Starting copter");
 				currentThrottle = 156;
-				analogWrite(northWestPin, currentThrottle);
-				analogWrite(northEastPin, currentThrottle);
-				analogWrite(southEastPin, currentThrottle);
-				analogWrite(southWestPin, currentThrottle);
+				motors.setSpeed(currentThrottle);
 				break;
 			}
 		}
@@ -151,7 +142,7 @@ void loop() {
 
 		if (command == 'X') {
 			Serial.println("Stop");
-			currentThrottle = zeroThrottle;
+			currentThrottle = motors.stop();
 			USE_PID = false;
 		}
 
@@ -276,29 +267,23 @@ void loop() {
 	// Serial.print(":");
 	// Serial.println(yprd[0]*RADIANS_TO_DEGREES, 2);   
 
-//	Serial.print("PID:");   
-//	Serial.print(nickOut, 2);
-//	Serial.print(":");
-//	Serial.print(rollOut, 2);
-//	Serial.print(":");
-//	Serial.println(yawOut, 2);
-
-	double nw = currentThrottle - nickOut + rollOut - yawOut;
-	double ne = currentThrottle - nickOut - rollOut + yawOut;
-	double se = currentThrottle + nickOut - rollOut - yawOut;
-	double sw = currentThrottle + nickOut + rollOut + yawOut;
+	//	Serial.print("PID:");   
+	//	Serial.print(nickOut, 2);
+	//	Serial.print(":");
+	//	Serial.print(rollOut, 2);
+	//	Serial.print(":");
+	//	Serial.println(yawOut, 2);
 
 	if (USE_PID){
-		analogWrite(northWestPin, nw);
-		analogWrite(northEastPin, ne);
-		analogWrite(southEastPin, se);
-		analogWrite(southWestPin, sw);
+		double nw = currentThrottle - nickOut + rollOut - yawOut;
+		double ne = currentThrottle - nickOut - rollOut + yawOut;
+		double se = currentThrottle + nickOut - rollOut - yawOut;
+		double sw = currentThrottle + nickOut + rollOut + yawOut;
+
+		motors.setSpeed(nw, ne, se, sw);
 	}
-	else{
-		analogWrite(northWestPin, currentThrottle);
-		analogWrite(northEastPin, currentThrottle);
-		analogWrite(southEastPin, currentThrottle);
-		analogWrite(southWestPin, currentThrottle);
+	else {
+		motors.setSpeed(currentThrottle);
 	}
 
 	// Serial.print("PWM:____");   

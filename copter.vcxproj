@@ -73,10 +73,14 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="FUTABA_SBUS.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
     <ClInclude Include="Motors.h" />
     <ClInclude Include="Visual Micro\.copter.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="FUTABA_SBUS.cpp" />
     <ClCompile Include="Motors.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

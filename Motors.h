@@ -1,13 +1,9 @@
 // Motors.h
 
+#include <Arduino.h>
+
 #ifndef _MOTORS_h
 #define _MOTORS_h
-
-#if defined(ARDUINO) && ARDUINO >= 100
-	#include "Arduino.h"
-#else
-	#include "WProgram.h"
-#endif
 
 #define KP_NICK 0
 #define KI_NICK 0
@@ -26,16 +22,19 @@
 #define southEastPin 9
 #define southWestPin 6
 
-class MotorsClass
+#define initialThrottle 150
+
+class Motors
 {
  protected:
 
 
  public:
 	void init();
+	void setSpeed(uint32_t speed);
+	void setSpeed(uint32_t nw, uint32_t ne, uint32_t se, uint32_t sw);
+	uint32_t stop();
 };
-
-extern MotorsClass Motors;
 
 #endif
 
