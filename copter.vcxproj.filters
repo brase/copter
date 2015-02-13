@@ -27,12 +27,39 @@
     <ClInclude Include="FUTABA_SBUS.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MotorSpeedController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PositionSensors.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="helper_3dmath.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MPU6050.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MPU6050_6Axis_MotionApps20.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MPU6050_9Axis_MotionApps41.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Motors.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="FUTABA_SBUS.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MotorSpeedController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PositionSensors.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MPU6050.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
