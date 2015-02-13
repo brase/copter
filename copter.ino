@@ -12,7 +12,6 @@
 Motors motors;
 MotorSpeedController motorController;
 PositionSensors positionSensors;
-FUTABA_SBUS sBus;
 RC_Reader rcReader;
 
 float ypr[3];
@@ -30,7 +29,6 @@ void setup() {
 	//TCCR0B = _BV(CS00) | _BV(CS01);
 	////do not forget to edit wiring.c to fix delay and milis
 
-	sBus.begin();
 	rcReader.init();
 	positionSensors.init();
 	motorController.init();
