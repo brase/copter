@@ -45,6 +45,9 @@
     <ClInclude Include="MPU6050_9Axis_MotionApps41.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="RC_Reader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Motors.cpp">
@@ -60,6 +63,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MPU6050.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RC_Reader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

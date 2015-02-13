@@ -1,13 +1,19 @@
+#include "RC_Reader.h"
 #include "PositionSensors.h"
 #include "MotorSpeedController.h"
 #include "Motors.h"
 #include <Wire.h>
 #include "I2Cdev.h"
 #include <PID_v1.h>
+#include "FUTABA_SBUS.h"
+#include "RC_Reader.h"
+
 
 Motors motors;
 MotorSpeedController motorController;
 PositionSensors positionSensors;
+FUTABA_SBUS sBus;
+RC_Reader rcReader;
 
 float ypr[3];
 
@@ -24,28 +30,19 @@ void setup() {
 	//TCCR0B = _BV(CS00) | _BV(CS01);
 	////do not forget to edit wiring.c to fix delay and milis
 
+	sBus.begin();
+	rcReader.init();
 	positionSensors.init();
 	motorController.init();
 	motors.init();
 
-	while (true){
-		Serial.print(".");
-		if (Serial.available()){ // Wait for initialization command from user
-			char command = Serial.read();
-			if (command == 'X') {
-				Serial.println("Starting copter");
-				currentThrottle = 156;
-				motors.setSpeed(currentThrottle);
-				break;
-			}
-		}
-		delay(500);
-	}
+	motors.setSpeed(currentThrottle);
 }
 
 void loop() {
-	// if programming failed, don't try to do anything
-	if (!positionSensors.dmpIsReady()) return;
+	int16_t pChannelData[7];
+	rcReader.readRc(pChannelData);
+	currentThrottle = pChannelData[2];
 
 	if (Serial.available()){
 		char command = Serial.read();
@@ -56,17 +53,17 @@ void loop() {
 			USE_PID = false;
 		}
 
-		if (command == 'F') {
-			currentThrottle = currentThrottle + 1;
-			Serial.print("Faster: ");
-			Serial.println(currentThrottle);
-		}
+		//if (command == 'F') {
+		//	currentThrottle = currentThrottle + 1;
+		//	Serial.print("Faster: ");
+		//	Serial.println(currentThrottle);
+		//}
 
-		if (command == 'S') {
-			currentThrottle = currentThrottle - 1;
-			Serial.print("Slower: ");
-			Serial.println(currentThrottle);
-		}
+		//if (command == 'S') {
+		//	currentThrottle = currentThrottle - 1;
+		//	Serial.print("Slower: ");
+		//	Serial.println(currentThrottle);
+		//}
 
 		if (command == 'E') {
 			Serial.println("Emergency Stop");
@@ -158,6 +155,7 @@ void loop() {
 	}
 	else {
 		motors.setSpeed(currentThrottle);
+		/*Serial.println(currentThrottle);*/
 	}
 
 	// Serial.print("PWM:____");   
@@ -169,4 +167,3 @@ void loop() {
 	// Serial.print("____:____");
 	// Serial.println(sw, 2);
 }
-
