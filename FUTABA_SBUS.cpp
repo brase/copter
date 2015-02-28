@@ -13,9 +13,9 @@ void FUTABA_SBUS::begin()
 	// set configuration for serial port (on Arduino Due, no preconfigured 
 	// settings for Serial.begin() are available)
 	// S-BUS uses an even parity and 2 stop bits
-	SBUS_DEVICE.begin(SBUS_BAUDRATE);
-	USART3->US_MR = US_MR_USART_MODE_NORMAL | US_MR_USCLKS_MCK | US_MR_CHRL_8_BIT | US_MR_PAR_EVEN |
-		US_MR_NBSTOP_2_BIT | US_MR_CHMODE_NORMAL;
+	SBUS_DEVICE.begin(SBUS_BAUDRATE, SERIAL_9O1_RXINV);
+	//USART3->US_MR = US_MR_USART_MODE_NORMAL | US_MR_USCLKS_MCK | US_MR_CHRL_8_BIT | US_MR_PAR_EVEN |
+	//	US_MR_NBSTOP_2_BIT | US_MR_CHMODE_NORMAL;
 
 
 	memset(m_pReadSBusData, NULL, 25);

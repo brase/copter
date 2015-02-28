@@ -23,11 +23,17 @@ double currentThrottle = 150;
 void setup() {
 	Serial.begin(115200);
 
-	////phase correct pwm on timer 1
-	//TCCR0A = _BV(COM0A1) | _BV(COM0B1) | _BV(WGM00);
-	////prescale factor of 64: 490 = 16000000 / (64 * 510)
-	//TCCR0B = _BV(CS00) | _BV(CS01);
-	////do not forget to edit wiring.c to fix delay and milis
+	while (true){
+		Serial.print(".");
+		if (Serial.available()){ // Wait for initialization command from user
+			char command = Serial.read();
+			if (command == 'X') {
+				Serial.println("Starting copter");
+				break;
+			}
+		}
+		delay(500);
+	}
 
 	rcReader.init();
 	positionSensors.init();
@@ -153,7 +159,7 @@ void loop() {
 	}
 	else {
 		motors.setSpeed(currentThrottle);
-		/*Serial.println(currentThrottle);*/
+		Serial.println(currentThrottle);
 	}
 
 	// Serial.print("PWM:____");   

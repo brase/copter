@@ -39,7 +39,7 @@ void PositionSensors::init()
 	Serial.println(F("Testing device connections..."));
 	Serial.println(mpu.testConnection() ? F("MPU6050 connection successful") : F("MPU6050 connection failed"));
 
-	//Serial.println(F("Initializing DMP..."));
+	Serial.println(F("Initializing DMP..."));
 	devStatus = mpu.dmpInitialize();
 
 	// make sure it worked (returns 0 if so)
@@ -49,7 +49,8 @@ void PositionSensors::init()
 
 		// enable Arduino interrupt detection
 		Serial.println(F("Enabling interrupt detection (Arduino external interrupt 0)..."));
-		attachInterrupt(2, dmpDataReady, RISING);
+		pinMode(14, INPUT);
+		attachInterrupt(14, dmpDataReady, RISING);
 		mpuIntStatus = mpu.getIntStatus();
 
 		// set our DMP Ready flag so the main loop() function knows it's okay to use it
