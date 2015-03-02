@@ -346,7 +346,7 @@ uint8_t MPU6050::dmpInitialize() {
 
     // get MPU product ID
     DEBUG_PRINTLN(F("Getting product ID..."));
-    //uint8_t productID = 0; //getProductID();
+    uint8_t productID = 0; //getProductID();
     DEBUG_PRINT(F("Product ID = "));
     DEBUG_PRINT(productID);
 

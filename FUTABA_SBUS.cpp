@@ -1,9 +1,9 @@
 // ch.moellinger@gmail.com, 05/2014
 
+#include "Config.h"
 #include "FUTABA_SBUS.h"
 
 #define SBUS_BAUDRATE 100000
-#define SBUS_DEVICE Serial3
 
 #define SBUS_PAYLOAD_STARTBYTE  0x0F
 #define SBUS_PAYLOAD_ENDBYTE    0x00

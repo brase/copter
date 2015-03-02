@@ -1,3 +1,4 @@
+#include "Config.h"
 #include "RC_Reader.h"
 #include "PositionSensors.h"
 #include "MotorSpeedController.h"
@@ -21,14 +22,14 @@ bool USE_PID = false;
 double currentThrottle = 150;
 
 void setup() {
-	Serial.begin(115200);
+	DEBUG.begin(115200);
 
 	while (true){
-		Serial.print(".");
-		if (Serial.available()){ // Wait for initialization command from user
-			char command = Serial.read();
+		DEBUG.print(".");
+		if (DEBUG.available()){ // Wait for initialization command from user
+			char command = DEBUG.read();
 			if (command == 'X') {
-				Serial.println("Starting copter");
+				DEBUG.println("Starting copter");
 				break;
 			}
 		}
@@ -123,23 +124,21 @@ void loop() {
 		}*/
 	}
 
-	//Serial.println(currentThrottle);
-
 	positionSensors.getYawPitchRoll(ypr);
 
-	// Serial.print("DMP:");
-	// Serial.print(yprd[2]*RADIANS_TO_DEGREES, 2);
-	// Serial.print(":");
-	// Serial.print(-yprd[1]*RADIANS_TO_DEGREES, 2);
-	// Serial.print(":");
-	// Serial.println(yprd[0]*RADIANS_TO_DEGREES, 2);   
+	// DEBUG.print("DMP:");
+	// DEBUG.print(yprd[2]*RADIANS_TO_DEGREES, 2);
+	// DEBUG.print(":");
+	// DEBUG.print(-yprd[1]*RADIANS_TO_DEGREES, 2);
+	// DEBUG.print(":");
+	// DEBUG.println(yprd[0]*RADIANS_TO_DEGREES, 2);   
 
-	//	Serial.print("PID:");   
-	//	Serial.print(nickOut, 2);
-	//	Serial.print(":");
-	//	Serial.print(rollOut, 2);
-	//	Serial.print(":");
-	//	Serial.println(yawOut, 2);
+	//	DEBUG.print("PID:");   
+	//	DEBUG.print(nickOut, 2);
+	//	DEBUG.print(":");
+	//	DEBUG.print(rollOut, 2);
+	//	DEBUG.print(":");
+	//	DEBUG.println(yawOut, 2);
 
 	if (USE_PID){
 		double motorThrottleValues[4];
@@ -159,15 +158,16 @@ void loop() {
 	}
 	else {
 		motors.setSpeed(currentThrottle);
-		Serial.println(currentThrottle);
 	}
 
-	// Serial.print("PWM:____");   
-	// Serial.print(nw, 2);
-	// Serial.print("____:____");
-	// Serial.print(ne, 2);
-	// Serial.print("____:____");
-	// Serial.print(se, 2);
-	// Serial.print("____:____");
-	// Serial.println(sw, 2);
+	DEBUG.println(currentThrottle);
+
+	// DEBUG.print("PWM:____");   
+	// DEBUG.print(nw, 2);
+	// DEBUG.print("____:____");
+	// DEBUG.print(ne, 2);
+	// DEBUG.print("____:____");
+	// DEBUG.print(se, 2);
+	// DEBUG.print("____:____");
+	// DEBUG.println(sw, 2);
 }

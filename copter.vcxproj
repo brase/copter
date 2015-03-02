@@ -73,6 +73,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Config.h" />
     <ClInclude Include="FUTABA_SBUS.h">
       <FileType>CppCode</FileType>
     </ClInclude>

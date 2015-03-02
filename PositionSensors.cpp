@@ -1,3 +1,4 @@
+#include "Config.h"
 #include "PositionSensors.h"
 #include "MPU6050_9Axis_MotionApps41.h"
 
@@ -33,28 +34,28 @@ void PositionSensors::init()
 	// join I2C bus (I2Cdev library doesn't do this automatically)
 	Wire.begin();
 
-	Serial.println(F("Initializing I2C devices..."));
+	DEBUG.println(F("Initializing I2C devices..."));
 	mpu.initialize();
 
-	Serial.println(F("Testing device connections..."));
-	Serial.println(mpu.testConnection() ? F("MPU6050 connection successful") : F("MPU6050 connection failed"));
+	DEBUG.println(F("Testing device connections..."));
+	DEBUG.println(mpu.testConnection() ? F("MPU6050 connection successful") : F("MPU6050 connection failed"));
 
-	Serial.println(F("Initializing DMP..."));
+	DEBUG.println(F("Initializing DMP..."));
 	devStatus = mpu.dmpInitialize();
 
 	// make sure it worked (returns 0 if so)
 	if (devStatus == 0) {
-		Serial.println(F("Enabling DMP..."));
+		DEBUG.println(F("Enabling DMP..."));
 		mpu.setDMPEnabled(true);
 
 		// enable Arduino interrupt detection
-		Serial.println(F("Enabling interrupt detection (Arduino external interrupt 0)..."));
-		pinMode(14, INPUT);
-		attachInterrupt(14, dmpDataReady, RISING);
+		DEBUG.println(F("Enabling interrupt detection (Arduino external interrupt 0)..."));
+		/*pinMode(14, INPUT);
+		attachInterrupt(14, dmpDataReady, RISING);*/
 		mpuIntStatus = mpu.getIntStatus();
 
 		// set our DMP Ready flag so the main loop() function knows it's okay to use it
-		Serial.println(F("DMP ready! Waiting for first interrupt..."));
+		DEBUG.println(F("DMP ready! Waiting for first interrupt..."));
 		dmpReady = true;
 
 		// get expected DMP packet size for later comparison
@@ -65,9 +66,9 @@ void PositionSensors::init()
 		// 1 = initial memory load failed
 		// 2 = DMP configuration updates failed
 		// (if it's going to break, usually the code will be 1)
-		Serial.print(F("DMP Initialization failed (code "));
-		Serial.print(devStatus);
-		Serial.println(F(")"));
+		DEBUG.print(F("DMP Initialization failed (code "));
+		DEBUG.print(devStatus);
+		DEBUG.println(F(")"));
 	}
 
 	// configure LED for output
@@ -90,7 +91,7 @@ void PositionSensors::getYawPitchRoll(float* ypr)
 		if ((mpuIntStatus & 0x10) || fifoCount == 1024) {
 			// reset so we can continue cleanly
 			mpu.resetFIFO();
-			Serial.println(F("FIFO overflow!"));
+			DEBUG.println(F("FIFO overflow!"));
 
 			// otherwise, check for DMP data ready interrupt (this should happen frequently)
 		}
