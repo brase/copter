@@ -37,5 +37,5 @@ void RC_Reader::init()
 	 //return (iInput - 1024) / 2048.0f + 0.5f;
 
 	 uint16_t constrained = constrain(iInput, 172, 1812);
-	 return map(constrained, 172, 1811, 155, 180);
+	 return map(constrained, 172, 1811, 151, 180);
  }

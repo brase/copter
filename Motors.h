@@ -5,10 +5,10 @@
 #ifndef _MOTORS_h
 #define _MOTORS_h
 
-#define northWestPin 11
-#define northEastPin 10
-#define southEastPin 9
-#define southWestPin 6
+#define northWestPin 22
+#define northEastPin 23
+#define southEastPin 20
+#define southWestPin 21
 
 #define initialThrottle 150
 

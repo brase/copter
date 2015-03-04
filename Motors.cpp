@@ -2,6 +2,11 @@
 
 void Motors::init()
 {
+	pinMode(northWestPin, OUTPUT);
+	pinMode(northEastPin, OUTPUT);
+	pinMode(southEastPin, OUTPUT);
+	pinMode(southWestPin, OUTPUT);
+
 	stop();
 }
 

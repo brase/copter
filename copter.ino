@@ -18,110 +18,91 @@ RC_Reader rcReader;
 float ypr[3];
 
 bool USE_PID = false;
+bool USE_RC = false;
 
 double currentThrottle = 150;
 
 void setup() {
 	DEBUG.begin(115200);
 
-	while (true){
-		DEBUG.print(".");
-		if (DEBUG.available()){ // Wait for initialization command from user
-			char command = DEBUG.read();
-			if (command == 'X') {
-				DEBUG.println("Starting copter");
-				break;
-			}
-		}
-		delay(500);
-	}
-
 	rcReader.init();
 	positionSensors.init();
 	motorController.init();
 	motors.init();
 
-	motors.setSpeed(currentThrottle);
+	USE_RC = true;
 }
 
 void loop() {
-	int16_t pChannelData[7];
-	rcReader.readRc(pChannelData);
-	currentThrottle = pChannelData[2];
-
-	if (Serial.available()){
-		char command = Serial.read();
+	if (DEBUG.available()){
+		char command = DEBUG.read();
 
 		if (command == 'X') {
-			Serial.println("Stop");
+			DEBUG.println("Stop");
 			currentThrottle = motors.stop();
 			USE_PID = false;
+			USE_RC = false;
 		}
 
-		//if (command == 'F') {
-		//	currentThrottle = currentThrottle + 1;
-		//	Serial.print("Faster: ");
-		//	Serial.println(currentThrottle);
-		//}
-
-		//if (command == 'S') {
-		//	currentThrottle = currentThrottle - 1;
-		//	Serial.print("Slower: ");
-		//	Serial.println(currentThrottle);
-		//}
-
 		if (command == 'E') {
-			Serial.println("Emergency Stop");
-			currentThrottle = 100;
+			DEBUG.println("Emergency Stop");
+			currentThrottle = motors.stop();
+			USE_RC = false;
 			USE_PID = false;
 		}
 
 		if (command == 'P'){
-			Serial.println("Toggle PID");
+			DEBUG.println("Toggle PID");
 			USE_PID = !USE_PID;
 		}
 
 		/*if (command == 'q'){
 			double kp = rollController.GetKp() + 0.1;
 			rollController.SetTunings(rollController.GetKp() + 0.1, rollController.GetKi(), rollController.GetKd());
-			Serial.print("kp:   ");
-			Serial.println(kp);
+			DEBUG.print("kp:   ");
+			DEBUG.println(kp);
 		}
 
 		if (command == 'a'){
 			double kp = rollController.GetKp() - 0.1;
 			rollController.SetTunings(kp, rollController.GetKi(), rollController.GetKd());
-			Serial.print("kp:   ");
-			Serial.println(kp);
+			DEBUG.print("kp:   ");
+			DEBUG.println(kp);
 		}
 
 		if (command == 'w'){
 			double ki = rollController.GetKi() + 0.1;
 			rollController.SetTunings(rollController.GetKp(), ki, rollController.GetKd());
-			Serial.print("ki:   ");
-			Serial.println(ki);
+			DEBUG.print("ki:   ");
+			DEBUG.println(ki);
 		}
 
 		if (command == 's'){
 			double ki = rollController.GetKi() - 0.1;
 			rollController.SetTunings(rollController.GetKp(), ki, rollController.GetKd());
-			Serial.print("ki:   ");
-			Serial.println(ki);
+			DEBUG.print("ki:   ");
+			DEBUG.println(ki);
 		}
 
 		if (command == 'e'){
 			double kd = rollController.GetKd() + 0.1;
 			rollController.SetTunings(rollController.GetKp(), rollController.GetKi(), kd);
-			Serial.print("kd:   ");
-			Serial.println(kd);
+			DEBUG.print("kd:   ");
+			DEBUG.println(kd);
 		}
 
 		if (command == 'd'){
 			double kd = rollController.GetKd() - 0.1;
 			rollController.SetTunings(rollController.GetKp(), rollController.GetKi(), kd);
-			Serial.print("kd:   ");
-			Serial.println(kd);
+			DEBUG.print("kd:   ");
+			DEBUG.println(kd);
 		}*/
+	}
+
+	if (USE_RC){
+		int16_t pChannelData[7];
+		rcReader.readRc(pChannelData);
+		currentThrottle = pChannelData[2];
 	}
 
 	positionSensors.getYawPitchRoll(ypr);
@@ -160,14 +141,5 @@ void loop() {
 		motors.setSpeed(currentThrottle);
 	}
 
-	DEBUG.println(currentThrottle);
-
-	// DEBUG.print("PWM:____");   
-	// DEBUG.print(nw, 2);
-	// DEBUG.print("____:____");
-	// DEBUG.print(ne, 2);
-	// DEBUG.print("____:____");
-	// DEBUG.print(se, 2);
-	// DEBUG.print("____:____");
-	// DEBUG.println(sw, 2);
+	//delay(100);
 }
