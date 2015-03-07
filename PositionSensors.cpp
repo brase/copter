@@ -49,9 +49,9 @@ void PositionSensors::init()
 		mpu.setDMPEnabled(true);
 
 		// enable Arduino interrupt detection
-		DEBUG.println(F("Enabling interrupt detection (Arduino external interrupt 0)..."));
-		/*pinMode(14, INPUT);
-		attachInterrupt(14, dmpDataReady, RISING);*/
+		DEBUG.println(F("Enabling interrupt detection ..."));
+		pinMode(14, INPUT);
+		attachInterrupt(14, dmpDataReady, RISING);
 		mpuIntStatus = mpu.getIntStatus();
 
 		// set our DMP Ready flag so the main loop() function knows it's okay to use it

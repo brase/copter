@@ -39,6 +39,13 @@ void MotorSpeedController::compute(double currentThrottle, float ypr[3], const d
 	rollController.Compute();
 	yawController.Compute();
 
+	//	DEBUG.print("PID:");
+	//	DEBUG.print(nick, 2);
+	//	DEBUG.print(":");
+	//	DEBUG.print(roll, 2);
+	//	DEBUG.print(":");
+	//	DEBUG.println(yaw, 2);
+
 	motorThrottleValue[0] = currentThrottle - nick + roll - yaw;
 	motorThrottleValue[1] = currentThrottle - nick - roll + yaw;
 	motorThrottleValue[2] = currentThrottle + nick - roll - yaw;

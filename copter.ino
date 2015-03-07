@@ -31,6 +31,7 @@ void setup() {
 	motors.init();
 
 	USE_RC = true;
+	USE_PID = true;
 }
 
 void loop() {
@@ -107,19 +108,12 @@ void loop() {
 
 	positionSensors.getYawPitchRoll(ypr);
 
-	// DEBUG.print("DMP:");
-	// DEBUG.print(yprd[2]*RADIANS_TO_DEGREES, 2);
-	// DEBUG.print(":");
-	// DEBUG.print(-yprd[1]*RADIANS_TO_DEGREES, 2);
-	// DEBUG.print(":");
-	// DEBUG.println(yprd[0]*RADIANS_TO_DEGREES, 2);   
-
-	//	DEBUG.print("PID:");   
-	//	DEBUG.print(nickOut, 2);
-	//	DEBUG.print(":");
-	//	DEBUG.print(rollOut, 2);
-	//	DEBUG.print(":");
-	//	DEBUG.println(yawOut, 2);
+	//DEBUG.print("DMP:");
+	//DEBUG.print(ypr[2], 2);
+	//DEBUG.print(":");
+	//DEBUG.print(-ypr[1], 2);
+	//DEBUG.print(":");
+	//DEBUG.println(ypr[0], 2);
 
 	if (USE_PID){
 		double motorThrottleValues[4];
@@ -140,6 +134,4 @@ void loop() {
 	else {
 		motors.setSpeed(currentThrottle);
 	}
-
-	//delay(100);
 }
