@@ -39,6 +39,7 @@ void RC_Reader::init()
 	pTarget[0] = lastRoll;
 	pTarget[1] = lastPitch;
 	pTarget[2] = lastThrottle;
+	pTarget[3] = 0;
 }
 
  float RC_Reader::NormalizeThrottle(int16_t iInput)

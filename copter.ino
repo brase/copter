@@ -100,10 +100,23 @@ void loop() {
 		}*/
 	}
 
+	double wantedAngles[3];
+	wantedAngles[0] = 0;
+	wantedAngles[1] = 0;
+	wantedAngles[2] = 0;
+
 	if (USE_RC){
 		int16_t pChannelData[7];
 		rcReader.readRc(pChannelData);
-		currentThrottle = pChannelData[2];
+
+		//yaw
+		wantedAngles[0] = ypr[0];
+		//pitch
+		wantedAngles[1] = (double)pChannelData[1] / 100;
+		//roll
+		wantedAngles[2] = (double)pChannelData[0] / 100;
+
+		currentThrottle = (double)pChannelData[2];
 	}
 
 	positionSensors.getYawPitchRoll(ypr);
@@ -117,11 +130,6 @@ void loop() {
 
 	if (USE_PID){
 		double motorThrottleValues[4];
-		double wantedAngles[3];
-		wantedAngles[0] = 0;
-		wantedAngles[1] = 0;
-		wantedAngles[2] = 0;
-
 		motorController.compute(currentThrottle, ypr, wantedAngles, motorThrottleValues);
 
 		double nw = motorThrottleValues[0];
