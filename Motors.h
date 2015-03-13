@@ -1,5 +1,5 @@
 // Motors.h
-
+#include "Config.h"
 #include <Arduino.h>
 
 #ifndef _MOTORS_h
@@ -10,7 +10,7 @@
 #define southEastPin 20
 #define southWestPin 21
 
-#define initialThrottle 150
+
 
 class Motors
 {

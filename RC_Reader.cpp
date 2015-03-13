@@ -45,7 +45,7 @@ void RC_Reader::init()
  float RC_Reader::NormalizeThrottle(int16_t iInput)
  {
 	 uint16_t constrained = constrain(iInput, 172, 1812);
-	 return map(constrained, 172, 1812, 151, 180);
+	 return map(constrained, 172, 1812, 151, 220);
  }
 
  float RC_Reader::NormalizePitch(int16_t iInput)

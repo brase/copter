@@ -20,7 +20,10 @@ float ypr[3];
 bool USE_PID = false;
 bool USE_RC = false;
 
+bool initializedYaw = false;
+
 double currentThrottle = 150;
+double wantedYaw = 0;
 
 void setup() {
 	DEBUG.begin(115200);
@@ -50,11 +53,6 @@ void loop() {
 			currentThrottle = motors.stop();
 			USE_RC = false;
 			USE_PID = false;
-		}
-
-		if (command == 'P'){
-			DEBUG.println("Toggle PID");
-			USE_PID = !USE_PID;
 		}
 
 		/*if (command == 'q'){
@@ -100,17 +98,27 @@ void loop() {
 		}*/
 	}
 
+	int16_t pChannelData[7];
+	rcReader.readRc(pChannelData);
+
+
+	if (!initializedYaw){
+		wantedYaw = ypr[0];
+		initializedYaw = true;
+	}
+
 	double wantedAngles[3];
-	wantedAngles[0] = 0;
+	wantedAngles[0] = wantedYaw;
 	wantedAngles[1] = 0;
 	wantedAngles[2] = 0;
 
 	if (USE_RC){
-		int16_t pChannelData[7];
-		rcReader.readRc(pChannelData);
+		double wantedYawCorrection = (double)pChannelData[1] / 100;
+		if (abs(wantedYawCorrection) > 0.02){
+			wantedYaw += wantedYawCorrection;
+			wantedAngles[0] = wantedYaw;
+		}
 
-		//yaw
-		wantedAngles[0] = ypr[0];
 		//pitch
 		wantedAngles[1] = (double)pChannelData[1] / 100;
 		//roll

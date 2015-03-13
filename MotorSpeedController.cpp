@@ -75,3 +75,13 @@ void MotorSpeedController::compute(double currentThrottle, float ypr[3], const d
 	//DEBUG.println(motorThrottleValue[3]);
 }
 
+void MotorSpeedController::reset(){
+	nickController.SetMode(MANUAL);
+	nickController.SetMode(AUTOMATIC);
+
+	rollController.SetMode(MANUAL);
+	rollController.SetMode(AUTOMATIC);
+
+	yawController.SetMode(MANUAL);
+	yawController.SetMode(AUTOMATIC);
+}

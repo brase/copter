@@ -11,16 +11,16 @@
 #define KI_NICK 0
 #define KD_NICK 0
 #else
-#define KP_NICK 0.1500
-#define KI_NICK 0.1000
-#define KD_NICK 0.0040
+#define KP_NICK 5.5
+#define KI_NICK 0
+#define KD_NICK 0
 #endif
 
-#define KP_ROLL 8
-#define KI_ROLL 0.1000
-#define KD_ROLL 0.0040
+#define KP_ROLL 5.5
+#define KI_ROLL 0
+#define KD_ROLL 0
 
-#define KP_YAW 0
+#define KP_YAW 5.5
 #define KI_YAW 0
 #define KD_YAW 0
 
@@ -32,6 +32,7 @@ class MotorSpeedController
  public:
 	void init();
 	void compute(double currentThrottle, float ypr[3], const double wantedAngles[3], double motorThrottleValue[4]);
+	void reset();
 private:
 
 };
