@@ -22,7 +22,7 @@ bool USE_RC = false;
 
 bool initializedYaw = false;
 
-double currentThrottle = 150;
+double currentThrottle = initialThrottle;
 double wantedYaw = 0;
 
 void setup() {
@@ -40,20 +40,6 @@ void setup() {
 void loop() {
 	if (DEBUG.available()){
 		char command = DEBUG.read();
-
-		if (command == 'X') {
-			DEBUG.println("Stop");
-			currentThrottle = motors.stop();
-			USE_PID = false;
-			USE_RC = false;
-		}
-
-		if (command == 'E') {
-			DEBUG.println("Emergency Stop");
-			currentThrottle = motors.stop();
-			USE_RC = false;
-			USE_PID = false;
-		}
 
 		/*if (command == 'q'){
 			double kp = rollController.GetKp() + 0.1;
@@ -101,8 +87,25 @@ void loop() {
 	int16_t pChannelData[7];
 	rcReader.readRc(pChannelData);
 
+	bool on = (bool)pChannelData[4];
 
-	if (!initializedYaw){
+	DEBUG.print("Raw: ");
+	DEBUG.print(pChannelData[4]);
+	DEBUG.print(" Bool: ");
+	DEBUG.print(on);
+
+	if (on){
+		USE_PID = true;
+		USE_RC = true;
+	}
+	else {
+		currentThrottle = motors.stop();
+		USE_PID = false;
+		USE_RC = false;
+	}
+
+	//if throttle is low (copter seems not to fly) set wanted yaw to current yaw angle
+	if (currentThrottle < initialThrottle + 10){
 		wantedYaw = ypr[0];
 		initializedYaw = true;
 	}
@@ -135,6 +138,9 @@ void loop() {
 	//DEBUG.print(-ypr[1], 2);
 	//DEBUG.print(":");
 	//DEBUG.println(ypr[0], 2);
+
+	DEBUG.print(" Throttle: ");
+	DEBUG.println(currentThrottle);
 
 	if (USE_PID){
 		double motorThrottleValues[4];

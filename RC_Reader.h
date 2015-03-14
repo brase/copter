@@ -20,11 +20,14 @@ class RC_Reader
 	int16_t lastThrottle;
 	int16_t lastPitch;
 	int16_t lastRoll;
+	int16_t lastYaw;
+	int16_t lastOn;
 
 	float NormalizeThrottle(int16_t iInput);
 	float NormalizeRoll(int16_t iInput);
 	float NormalizePitch(int16_t iInput);
 	float NormalizeYaw(int16_t iInput);
+	float NormalizeOnOffSwitch(int16_t iInput);
 };
 
 #endif

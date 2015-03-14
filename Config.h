@@ -5,7 +5,7 @@
 
 //#define STANGE
 
-//#define USB_MODE
+#define USB_MODE
 #ifdef USB_MODE
 	#define DEBUG Serial
 #else

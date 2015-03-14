@@ -39,26 +39,26 @@ void MotorSpeedController::compute(double currentThrottle, float ypr[3], const d
 	rollController.Compute();
 	yawController.Compute();
 
-	DEBUG.print("IS:");
-	DEBUG.print(yprd[1], 2);
-	DEBUG.print(":");
-	DEBUG.print(yprd[2], 2);
-	DEBUG.print(":");
-	DEBUG.print(yprd[0], 2);
+	//DEBUG.print("IS:");
+	//DEBUG.print(yprd[1], 2);
+	//DEBUG.print(":");
+	//DEBUG.print(yprd[2], 2);
+	//DEBUG.print(":");
+	//DEBUG.print(yprd[0], 2);
 
-	DEBUG.print(" WANTED:");
-	DEBUG.print(nickSet, 2);
-	DEBUG.print(":");
-	DEBUG.print(rollSet, 2);
-	DEBUG.print(":");
-	DEBUG.print(yawSet, 2);
+	//DEBUG.print(" WANTED:");
+	//DEBUG.print(nickSet, 2);
+	//DEBUG.print(":");
+	//DEBUG.print(rollSet, 2);
+	//DEBUG.print(":");
+	//DEBUG.print(yawSet, 2);
 
-	DEBUG.print(" PID:");
-	DEBUG.print(nick, 2);
-	DEBUG.print(":");
-	DEBUG.print(roll, 2);
-	DEBUG.print(":");
-	DEBUG.println(yaw, 2);
+	//DEBUG.print(" PID:");
+	//DEBUG.print(nick, 2);
+	//DEBUG.print(":");
+	//DEBUG.print(roll, 2);
+	//DEBUG.print(":");
+	//DEBUG.println(yaw, 2);
 
 	motorThrottleValue[0] = currentThrottle - nick + roll - yaw;
 	motorThrottleValue[1] = currentThrottle - nick - roll + yaw;
