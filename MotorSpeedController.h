@@ -11,16 +11,16 @@
 #define KI_NICK 0
 #define KD_NICK 0
 #else
-#define KP_NICK 5.5
+#define KP_NICK 0.5
 #define KI_NICK 0
-#define KD_NICK 0
+#define KD_NICK 1
 #endif
 
-#define KP_ROLL 5.5
+#define KP_ROLL 0.5
 #define KI_ROLL 0
-#define KD_ROLL 0
+#define KD_ROLL 1
 
-#define KP_YAW 5.5
+#define KP_YAW 0
 #define KI_YAW 0
 #define KD_YAW 0
 

@@ -1,3 +1,8 @@
 *.sdf
 *.opensdf
 Visual Micro
+Debug
+.vs
+*.suo
+__vm
+*.user

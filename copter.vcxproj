@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -18,13 +18,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -44,10 +44,10 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>c:\sdk\arduino-1.0.6\hardware\teensy\cores\teensy3;C:\Users\basti_000\Documents\Arduino\copter;c:\sdk\arduino-1.0.6\libraries\Wire;c:\sdk\arduino-1.0.6\libraries\Wire\utility;C:\Users\basti_000\Documents\Arduino\libraries\I2Cdev;C:\Users\basti_000\Documents\Arduino\libraries\I2Cdev\utility;C:\Users\basti_000\Documents\Arduino\libraries\PID_v1;C:\Users\basti_000\Documents\Arduino\libraries\PID_v1\utility;c:\sdk\arduino-1.0.6\libraries;c:\sdk\arduino-1.0.6\hardware\teensy\libraries;C:\Program Files (x86)\Visual Micro\Visual Micro for Arduino\Micro Platforms\default\debuggers;C:\Users\basti_000\Documents\Arduino\libraries;c:\sdk\arduino-1.0.6\hardware\tools\arm-none-eabi\arm-none-eabi\include;c:\sdk\arduino-1.0.6\hardware\tools\arm-none-eabi\arm-none-eabi\include;c:\sdk\arduino-1.0.6\hardware\tools\arm-none-eabi\lib\gcc\arm-none-eabi\4.7.2\include;c:\sdk\arduino-1.0.6\hardware\tools\arm-none-eabi\lib\gcc\arm-none-eabi\4.7.2\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <ForcedIncludeFiles>C:\Users\basti_000\Documents\Arduino\copter\Visual Micro\.copter.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <IgnoreStandardIncludePath>true</IgnoreStandardIncludePath>
-      <PreprocessorDefinitions>ARDUINO=106;ARDUINO_MAIN;__AVR__;__avr__;__cplusplus;GCC_VERSION=40702;ARDUINO_ARCH_AVR;ARDUINO_AVR_TEENSY31;__MK20DX256__;TEENSYDUINO=120;F_CPU=96000000;USB_SERIAL;LAYOUT_US_ENGLISH;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\..\Documents\Arduino\libraries\br3ttb-Arduino-PID-Library-5adeed5;$(ProjectDir)..\..\..\Documents\Arduino\libraries\I2Cdev;$(ProjectDir)..\..\..\..\..\SDK\arduino-1.8.1\hardware\teensy\avr\libraries\Wire;$(ProjectDir)..\..\..\..\..\SDK\arduino-1.8.1\hardware\teensy\avr\libraries\Wire\utility;$(ProjectDir)..\..\..\..\..\SDK\arduino-1.8.1\libraries;$(ProjectDir)..\..\..\..\..\SDK\arduino-1.8.1\hardware\teensy\avr\libraries;$(ProjectDir)..\..\..\Documents\Arduino\libraries;$(ProjectDir)..\..\..\..\..\SDK\arduino-1.8.1\hardware\teensy\avr\cores\teensy3;$(ProjectDir)..\..\..\..\..\SDK\arduino-1.8.1\hardware\teensy\avr\cores\teensy3\avr;$(ProjectDir)..\..\..\..\..\SDK\arduino-1.8.1\hardware\teensy\avr\cores\teensy3\util;$(ProjectDir)..\..\..\..\..\SDK\arduino-1.8.1\hardware\teensy\avr\cores\teensy3\utils;$(ProjectDir)..\..\..\..\..\SDK\arduino-1.8.1\hardware\teensy\avr\cores\teensy3\avr;$(ProjectDir)..\..\..\..\..\SDK\arduino-1.8.1\hardware\tools\arm\arm-none-eabi\include;$(ProjectDir)..\copter;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ForcedIncludeFiles>$(ProjectDir)__vm\.copter.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
+      <PreprocessorDefinitions>__HARDWARE_MK20dx256__;__HARDWARE_MK20DX256__;__MK20DX256__;TEENSYDUINO=134;ARDUINO=10801;F_CPU=96000000;USB_SERIAL;LAYOUT_US_ENGLISH;__cplusplus=201103L;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -85,7 +85,7 @@
     <ClInclude Include="MPU6050_9Axis_MotionApps41.h" />
     <ClInclude Include="PositionSensors.h" />
     <ClInclude Include="RC_Reader.h" />
-    <ClInclude Include="Visual Micro\.copter.vsarduino.h" />
+    <ClInclude Include="__vm\.copter.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FUTABA_SBUS.cpp" />

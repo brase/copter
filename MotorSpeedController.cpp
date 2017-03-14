@@ -1,14 +1,14 @@
 #include "MotorSpeedController.h"
 
 double yprd[3];
+double yaw, yawSet = 0;
+PID yawController(&yprd[0], &yaw, &yawSet, KP_YAW, KI_YAW, KD_YAW, REVERSE);
+
 double nick, nickSet = 0;
-PID nickController(&yprd[2], &nick, &nickSet, KP_NICK, KI_NICK, KD_NICK, REVERSE);
+PID nickController(&yprd[1], &nick, &nickSet, KP_NICK, KI_NICK, KD_NICK, DIRECT);
 
 double roll, rollSet = 0;
-PID rollController(&yprd[1], &roll, &rollSet, KP_ROLL, KI_ROLL, KD_ROLL, REVERSE);
-
-double yaw, yawSet = 0;
-PID yawController(&yprd[0], &yaw, &yawSet, KP_YAW, KI_YAW, KD_YAW, DIRECT);
+PID rollController(&yprd[2], &roll, &rollSet, KP_ROLL, KI_ROLL, KD_ROLL, DIRECT);
 
 void MotorSpeedController::init()
 {
@@ -31,9 +31,9 @@ void MotorSpeedController::compute(double currentThrottle, float ypr[3], const d
 	yprd[1] = ypr[1];
 	yprd[2] = ypr[2];
 
+	yawSet = wantedAngles[0];
 	nickSet = wantedAngles[1];
 	rollSet = wantedAngles[2];
-	yawSet = wantedAngles[0];
 
 	nickController.Compute();
 	rollController.Compute();

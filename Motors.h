@@ -5,10 +5,10 @@
 #ifndef _MOTORS_h
 #define _MOTORS_h
 
-#define northWestPin 22
-#define northEastPin 23
-#define southEastPin 20
-#define southWestPin 21
+#define northWestPin 20
+#define northEastPin 21
+#define southEastPin 22
+#define southWestPin 23
 
 
 
